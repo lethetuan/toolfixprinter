@@ -148,7 +148,7 @@ exit /b
 
 :DeleteCNBJNP
 echo [INFO] Dang kiem tra va xoa cong CNBJNP...
-powershell -Command "$p='HKLM:\SYSTEM\CurrentControlSet\Control\Print\Monitors'; Get-ChildItem -Path $p \vert{} Where-Object {$_.Name -match 'CNBJNP'} | ForEach-Object { Remove-Item -Path $_.PSPath -Recurse -Force; Write-Host 'Da xoa:'$_.Name }"
+powershell -Command "$p='HKLM:\SYSTEM\CurrentControlSet\Control\Print\Monitors'; Get-ChildItem -Path $p | Where-Object {$_.Name -match 'CNBJNP'} | ForEach-Object { Remove-Item -Path $_.PSPath -Recurse -Force; Write-Host 'Da xoa:' $_.Name }"
 exit /b
 
 :: ==========================================
@@ -197,6 +197,7 @@ echo --- Auto Share Tat Ca May In ---
 echo Dang xu ly chia se, vui long cho...
 set "psf=%temp%\autoshare.ps1"
 
+:: Ghi file ps1 bang cu phap Pipeline (khong dung foreach de tranh loi nuot khoang trang)
 > "%psf%" echo $printers = Get-WmiObject -Class Win32_Printer -Filter 'Network=False'
 >> "%psf%" echo $printers ^| ForEach-Object {
 >> "%psf%" echo     $name =$_.Name
@@ -208,6 +209,7 @@ set "psf=%temp%\autoshare.ps1"
 >> "%psf%" echo     Write-Host "Da share: $name --^>$sn"
 >> "%psf%" echo }
 
+:: Thuc thi file ps1 sau do xoa file tam
 powershell -NoProfile -ExecutionPolicy Bypass -File "%psf%"
 del /q "%psf%" >nul 2>&1
 
@@ -255,7 +257,7 @@ net stop spooler >nul 2>&1
 dism /Online /Enable-Feature /FeatureName:Printing-Foundation-InternetPrinting-Client /NoRestart
 dism /Online /Enable-Feature /FeatureName:Printing-LPRPortMonitor /NoRestart
 echo Phan quyen FullControl cho User hien tai tren Registry...
-powershell -Command "$p='HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows';$acl=Get-Acl $p; $rule=New-Object System.Security.AccessControl.RegistryAccessRule('Everyone','FullControl','ContainerInherit,ObjectInherit','None','Allow'); $acl.SetAccessRule($rule); Set-Acl -Path $p -AclObject$acl; Write-Host 'Phan quyen OK.'"
+powershell -Command "$p='HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows'; $acl=Get-Acl $p; $rule=New-Object System.Security.AccessControl.RegistryAccessRule('Everyone','FullControl','ContainerInherit,ObjectInherit','None','Allow'); $acl.SetAccessRule($rule); Set-Acl -Path $p -AclObject $acl; Write-Host 'Phan quyen OK.'"
 reg delete "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Windows" /v Device /f >nul 2>&1
 reg add "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Windows" /v LegacyDefaultPrinterMode /t REG_DWORD /d 1 /f >nul
 call :RestartSpooler
@@ -340,7 +342,7 @@ pause & goto MainMenu
 :Fix771
 echo --- Fix 0x00000771 (Printer Offline) ---
 echo Dang chuyen may in sang trang thai Online...
-powershell -Command "$p = Get-WmiObject -Class Win32_Printer | Where-Object { $_.WorkOffline -eq$true }; foreach ($i in$p) { $i.WorkOffline =$false; $i.Put() \vert{} Out-Null; Write-Host 'Da Online:'$i.Name }"
+powershell -Command "$p = Get-WmiObject -Class Win32_Printer | Where-Object { $_.WorkOffline -eq $true }; foreach ($i in $p) { $i.WorkOffline = $false; $i.Put() | Out-Null; Write-Host 'Da Online:' $i.Name }"
 net stop spooler >nul 2>&1
 del /q /f "%SystemRoot%\System32\spool\PRINTERS\*.*" >nul 2>&1
 call :RestartSpooler
@@ -353,12 +355,22 @@ echo --- Them Credential ---
 :InputSrv
 set "srv="
 set /p srv="Nhap IP hoac Ten may chu (VD: 192.168.1.10): "
+
+:: Tu dong xoa khoang trang neu bam nham
 set "srv=%srv: =%"
+
+:: Kiem tra bo trong
 if "%srv%"=="" goto SrvEmpty
+
+:: Kiem tra do dai (it nhat 2 ky tu)
 if "%srv:~1,1%"=="" goto SrvShort
+
+:: Kiem tra ky tu hop le
 > "%temp%\srv_check.txt" echo "%srv%"
 findstr /R /I /V "^.[a-z0-9._-]*.$" "%temp%\srv_check.txt" >nul
 if %errorlevel% equ 0 goto SrvInvalid
+
+:: Neu dung het dieu kien thi xoa file tam va di tiep
 del /q "%temp%\srv_check.txt" >nul 2>&1
 goto InputUsr
 
@@ -392,6 +404,7 @@ if "%pwd%"=="" (
     goto InputPwd
 )
 
+:: Thuc thi them Credential
 cmdkey /add:%srv% /user:%usr% /pass:%pwd%
 echo [OK] Da them credential thanh cong cho: %srv%
 pause & goto MainMenu
@@ -443,7 +456,7 @@ pause & goto MainMenu
 
 :ResetPorts
 echo --- Reset PrinterPorts (Chi Xoa IP Loi) ---
-powershell -Command "Get-Item 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Ports' | Select-Object -ExpandProperty Property | Where-Object { $_ -notmatch '(?i)^(usb|lpt|com|file:|nul|portprompt|hklm|xps)' -and ($_ -match '\.' -or$_ -match '\\\\') } | ForEach-Object { Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Ports' -Name $_ -Force; Write-Host 'Da xoa port loi:'$_ }"
+powershell -Command "Get-Item 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Ports' | Select-Object -ExpandProperty Property | Where-Object { $_ -notmatch '(?i)^(usb|lpt|com|file:|nul|portprompt|hklm|xps)' -and ($_ -match '\.' -or $_ -match '\\\\') } | ForEach-Object { Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Ports' -Name $_ -Force; Write-Host 'Da xoa port loi:' $_ }"
 call :RestartSpooler
 echo [OK] Hoan tat. (Giu nguyen cong USB/LPT/COM).
 pause & goto MainMenu
