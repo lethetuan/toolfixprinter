@@ -1,9 +1,26 @@
 Trong môi trường doanh nghiệp hoặc gia đình dùng nhiều máy tính, dùng chung máy in qua mạng là cách tối ưu để tiết kiệm nguồn lực và nâng cao hiệu suất. Tuy nhiên, tình trạng không thể chia sẻ máy in vẫn xuất hiện phổ biến trên Windows 11, 10 hay các bản cũ hơn, dù thiết bị đã nhận đủ driver và cùng kết nối vào một hệ thống modem wifi hoặc switch mạng chung.
 
 
-## Cách Nhận Biết Máy In Đang Bị Lỗi Chia Sẻ (Win 10 & Win 11)
+## Cách Nhận Biết Máy In Đang Bị Lỗi Khi Chia Sẻ Cho các Máy Tính Khác(Window 10 & Window 11)
+
+0x00000bc4 – ERROR_PRINTER_NOT_FOUND
+
+0x00000709 – ERROR_INVALID_PRINTER_NAME
+
+Lỗi chia sẻ máy in 0x00006d9
+
+0x00000709, 0x00000040, 0x00000bc4  
+
+Chia sẻ máy in báo lỗi 0x0000011b
+
+Operation could not be completed
+
+No Printers Were Found.
+
+The printer name is invalid…
 
 # Hướng Dẫn Tạo Và Sử Dụng Tool Fix Lỗi Máy In LAN & USB 
+
 **Nguồn/Tác giả:** lethetuanpc.blogspot.com (Batch Version)
 
 ---
