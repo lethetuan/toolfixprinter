@@ -24,8 +24,11 @@ Trong môi trường doanh nghiệp hoặc gia đình dùng nhiều máy tính, 
 
 Bạn không cần cài đặt phần mềm bên thứ 3, chỉ cần làm theo các bước sau để tạo file chạy trực tiếp:
 
-**Bước 1:** Mở ứng dụng **Notepad** trên Windows (Nhấn phím `Windows`, gõ `Notepad` và mở lên).
+**Bước 1:** Mở ứng dụng **Notepad** trên Windows (Click chuột phải chọn `New` -> `Text Document` và mở lên).
 
+<img width="490" height="392" alt="image" src="https://github.com/user-attachments/assets/b6bc65a5-af03-466a-9159-ec2dd1819a03" />
+
+<img width="602" height="429" alt="image" src="https://github.com/user-attachments/assets/4a1d5f5e-9a2a-4eea-a18e-c946fb69b895" />
 
 **Bước 2:** Copy toàn bộ đoạn mã Batch dưới đây và dán vào Notepad:
 
@@ -532,7 +535,12 @@ if "%mgmt%"=="3" start rundll32 printui.dll,PrintUIEntry /s /t2
 goto MainMenu
 ```
 
+
+
+
 **Bước 3:** Trên Notepad, chọn File > Save As...
+<img width="1176" height="602" alt="image" src="https://github.com/user-attachments/assets/1ec79ccf-2775-44c8-8ff5-e0d0c9f8d989" />
+
 
 *   **Tại mục File name:** Đặt tên là ToolFixMayIn.bat (Lưu ý phải có đuôi .bat).
 
@@ -545,11 +553,16 @@ goto MainMenu
 
 *   **Bấm Save:** để lưu ra màn hình Desktop.
 
+<img width="944" height="590" alt="image" src="https://github.com/user-attachments/assets/122a3781-998a-4e67-9912-72d7297cc378" />
+
 
 ## 3. Hướng dẫn sử dụng
 
 Tại màn hình Desktop, click đúp chuột vào file ToolFixMayIn.bat vừa tạo. (Công cụ đã được lập trình để tự động yêu cầu cấp quyền Administrator nếu bạn mở theo cách thông thường).
 
+<img width="448" height="374" alt="image" src="https://github.com/user-attachments/assets/98dc77bd-448b-4d9b-a954-770cadf3fe2a" />
+
+<img width="1474" height="764" alt="image" src="https://github.com/user-attachments/assets/d54fc44e-368a-4e93-9bee-5222e0f5facf" />
 
 *   **Mẹo**: Bạn cũng có thể click chuột phải vào file > Chọn Run as administrator. Sau khi bảng điều khiển CMD hiện lên, bạn sẽ thấy giao diện Menu gồm 34 chức năng chia theo từng nhóm:
 
